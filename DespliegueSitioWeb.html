@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>SDespliegue Sitio Web</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Import Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+  <!-- Import Bootstrap JS and its dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <link rel="stylesheet" href="style0.css">
+</head>
+
+<body id="preview">
+  <h1 class="code-line" data-line-start=0 data-line-end=1><a
+      id="Tecnolgico_Nacional_de_Mxico_Campus_Comalcalco_0"></a>Tecnológico Nacional de México Campus Comalcalco</h1>
+  <h2 class="code-line" data-line-start=1 data-line-end=2><a id="Ing_en_Sistemas_Computacionales_1"></a>Ing. en Sistemas
+    Computacionales</h2>
+  <h5 class="code-line" data-line-start=3 data-line-end=4><a
+      id="Manual_Despliegue_de_un_Sitio_Web_con_Apache_y_MySQL_en_Ubuntu_Server_3"></a><strong>Manual:</strong>
+    Despliegue de un Sitio Web con Apache y MySQL en Ubuntu Server</h5>
+  <p class="has-line-data" data-line-start="6" data-line-end="7"><strong>Elaboró:</strong> M.C.C. José Adrian García
+    López</p>
+  <h2 class="code-line" data-line-start=8 data-line-end=9><a id="Resumen_8"></a>Resumen</h2>
+  <p class="has-line-data" data-line-start="9" data-line-end="10">Este manual proporciona instrucciones para configurar
+    una dirección IP estática en Ubuntu Server. También, proporciona una guía paso a paso para instalar y configurar un
+    servidor web con MySQL Server y phpMyAdmin para desplegar una aplicación web.</p>
+  <p class="has-line-data" data-line-start="11" data-line-end="12">Si prefieres seguir esta guía a través de un video,
+    puedes visitar el siguiente enlace: <a href="https://youtu.be/UbTIGJCk5CY">https://youtu.be/UbTIGJCk5CY</a></p>
+
+  <hr style="border-top: 1px solid rgb(185, 30, 30); margin-top: 1rem; margin-bottom: 1rem;">
+
+  <h1 class="code-line" data-line-start=13 data-line-end=14><a
+      id="Configuracin_de_una_direccin_IP_esttica_en_Ubuntu_Server_13"></a>Configuración de una dirección IP estática en
+    Ubuntu Server</h1>
+  <p class="has-line-data" data-line-start="15" data-line-end="16">Establecer una dirección IP estática para un servidor
+    web garantiza que la dirección IP del servidor no cambiará. Esto es fundamental para la accesibilidad del servidor
+    web, ya que los clientes necesitan una dirección IP constante para acceder al servidor. Además, una dirección IP
+    estática facilita la configuración de DNS y la administración de la red. A continuación, se muestra los pasos para
+    establecer una dirección IP estática en Ubuntu Server 22.04.4 LTS.</p>
+  <ol>
+    <li class="has-line-data" data-line-start="17" data-line-end="20">
+      <p class="has-line-data" data-line-start="17" data-line-end="19"><strong>Identificar el nombre de tu interfaz de
+          red</strong><br>
+        Se ejecuta el comando <code>ip a</code>. El nombre de la interfaz suele ser algo como <code>enp0s3</code> o
+        <code>eth0</code>.
+      </p>
+    </li>
+    <li class="has-line-data" data-line-start="20" data-line-end="27">
+      <p class="has-line-data" data-line-start="20" data-line-end="22"><strong>Abrir el archivo de configuración de
+          red</strong><br>
+        Ubuntu Server 18.04 y versiones posteriores utilizan Netplan para la configuración de red. Los archivos de
+        configuración de Netplan están en el directorio <code>/etc/netplan/</code> y tienen la extensión
+        <code>.yaml</code>. Se puede abrir el archivo con un editor de texto como <code>nano</code>:
+      </p>
+      <pre><code class="has-line-data" data-line-start="24" data-line-end="26" class="language-bash">sudo nano /etc/netplan/<span class="hljs-number">00</span>-installer-config.yaml
+</code></pre>
+    </li>
+    <li class="has-line-data" data-line-start="27" data-line-end="44">
+      <p class="has-line-data" data-line-start="27" data-line-end="29"><strong>Editar el archivo de
+          configuración</strong><br>
+        Aquí es donde se establece la dirección IP estática, la máscara de subred, la puerta de enlace y los servidores
+        DNS. La configuración debería tener un aspecto similar a este:</p>
+      <pre><code class="has-line-data" data-line-start="31" data-line-end="41" class="language-yaml">network:
+  ethernets:
+    enp0s3:
+      dhcp4: no
+      addresses: [192.168.1.100/24]
+      gateway4: 192.168.1.1
+      nameservers:
+        addresses: [192.168.1.100, 8.8.4.4]
+  version: 2
+</code></pre>
+      <p class="has-line-data" data-line-start="42" data-line-end="43">Es importante notar que la dirección IP
+        <code>192.168.1.100</code> es la que se debe cambiar, seguida de su <code>/24</code> que representa la máscara
+        de subred.
+      </p>
+    </li>
+    <li class="has-line-data" data-line-start="44" data-line-end="47">
+      <p class="has-line-data" data-line-start="44" data-line-end="46"><strong>Guardar el archivo</strong><br>
+        Presionar la combinación de teclas <code>Ctrl + O</code>, luego presiona <code>Enter</code> para confirmar que
+        quieres guardar los cambios.</p>
+    </li>
+    <li class="has-line-data" data-line-start="47" data-line-end="50">
+      <p class="has-line-data" data-line-start="47" data-line-end="49"><strong>Cerrar el archivo</strong><br>
+        Presionar la combinación <code>Ctrl + X</code>.</p>
+    </li>
+    <li class="has-line-data" data-line-start="50" data-line-end="53">
+      <p class="has-line-data" data-line-start="50" data-line-end="52"><strong>Probar los cambios</strong><br>
+        Es una buena práctica probar la nueva configuración con <code>sudo netplan try</code> para verificar que la
+        nueva configuración no contiene errores antes de aplicarla. Si la configuración fue exitosa, se debe de aplicar
+        los cambios con el comando <code>sudo netplan apply</code>.</p>
+    </li>
+    <li class="has-line-data" data-line-start="53" data-line-end="56">
+      <p class="has-line-data" data-line-start="53" data-line-end="55"><strong>Verificar la nueva
+          configuración</strong><br>
+        Ejecutar el comando <code>ip a</code>. Se debe mostrar dirección IP estática en la salida de este comando.</p>
+    </li>
+  </ol>
+  <h1 class="code-line" data-line-start=56 data-line-end=57><a
+      id="Instalacin_y_configuracin_del_servidor_56"></a>Instalación y configuración del servidor</h1>
+  <p class="has-line-data" data-line-start="58" data-line-end="59">Apache es una excelente opción para servir páginas
+    PHP debido a su integración con el módulo <strong>mod_php</strong>, que permite interpretar y servir páginas PHP de
+    manera eficiente. Además, Apache ofrece características como la reescritura de URL (a través del módulo
+    <strong>mod_rewrite</strong>), que es ampliamente utilizada en aplicaciones PHP. Paa lograr la correcta instalación
+    se debe de seguir los siguientes pasos.
+  </p>
+  <ol>
+    <li class="has-line-data" data-line-start="60" data-line-end="70">
+      <p class="has-line-data" data-line-start="60" data-line-end="62"><strong>Actualizar el sistema</strong><br>
+        Los comandos <code>update</code> y <code>upgrade</code> se utilizan para actualizar la lista de paquetes
+        disponibles y sus versiones en el sistema operativo Ubuntu para asegurar que se está instalando la última
+        versión de cualquier software y tener las últimas correcciones de seguridad.</p>
+      <pre><code class="has-line-data" data-line-start="64" data-line-end="67" class="language-bash">sudo apt update
+sudo apt upgrade -y
+</code></pre>
+      <p class="has-line-data" data-line-start="68" data-line-end="69">El <code>-y</code> es una opción que permite a
+        <code>apt</code> proceder con la actualización sin pedir confirmación al usuario. <code>apt</code> es un
+        manejador de dependencias de paquetes.
+      </p>
+    </li>
+    <li class="has-line-data" data-line-start="70" data-line-end="72">
+      <p class="has-line-data" data-line-start="70" data-line-end="71"><strong>Instalar el servidor web Apache</strong>
+      </p>
+    </li>
+  </ol>
+  <p class="has-line-data" data-line-start="72" data-line-end="73">Antes de iniciar la instalacion de
+    <strong>Apache</strong>, es importante mencionar que el comando <code>sudo apt install</code> es la base para
+    instalar cualquier paquete de software en el sistema operativo Ubuntu Server.
+  </p>
+  <p class="has-line-data" data-line-start="74" data-line-end="75">Después de saber esto, para instalar Apache, que es
+    un servidor web de código abierto muy popular por su robustez y soporte para una amplia gama de módulos adicionales,
+    incluyendo PHP, se debe ejecutar el siguiente comando:</p>
+  <pre><code class="has-line-data" data-line-start="77" data-line-end="79" class="language-bash">sudo apt install apache2
+</code></pre>
+  <p class="has-line-data" data-line-start="80" data-line-end="81">Para verificar que Apache está activo y funcionando
+    correctamente después de la instalación, puedes utilizar el comando <code>systemctl</code> para comprobar el estado
+    del servicio Apache. El comando completo sería:</p>
+  <pre><code class="has-line-data" data-line-start="83" data-line-end="85" class="language-bash">sudo systemctl status apache2
+</code></pre>
+  <p class="has-line-data" data-line-start="86" data-line-end="87">Este comando te mostrará el estado actual del
+    servicio Apache. Si Apache está funcionando correctamente, deberías ver <code>active (running)</code> en la salida
+    del comando. Para salir del resumen, debe de presionar la tecla <code>Q</code>.</p>
+  <p class="has-line-data" data-line-start="88" data-line-end="89">Además, se puede probar Apache abriendo un navegador
+    web cliente conectado a la misma red y navegando a <code>http://192.168.1.100</code>. Esta es la dirección IP que se
+    estableció estáticamente en la sección anterior. Si Apache está funcionando correctamente, deberías ver la página
+    por defecto de Apache.</p>
+  <h1 class="code-line" data-line-start=90 data-line-end=91><a id="Instalar_el_MYSQL_Server_90"></a><strong>Instalar el
+      MYSQL Server</strong></h1>
+  <p class="has-line-data" data-line-start="92" data-line-end="93">MySQL es un sistema de gestión de bases de datos
+    relacional de código abierto que es ampliamente usado en aplicaciones web, incluyendo sitios PHP. Proporciona una
+    forma eficiente y segura de almacenar, organizar y recuperar datos, lo que es esencial para cualquier aplicación
+    web. Para su instalación se debe de seguir los siguientes pasos:</p>
+  <ol>
+    <li class="has-line-data" data-line-start="94" data-line-end="103">
+      <p class="has-line-data" data-line-start="94" data-line-end="96"><strong>Instalar MySQL</strong><br>
+        El primer paso es instalar MySQL en tu servidor. Esto se hace con el comando:</p>
+      <pre><code class="has-line-data" data-line-start="98" data-line-end="100" class="language-bash">sudo apt install mysql-server
+</code></pre>
+      <p class="has-line-data" data-line-start="101" data-line-end="102">Durante la instalación, pide establecer una
+        contraseña para el usuario <code>root</code> de MySQL. En este caso se establece contraseña
+        <code>servertso</code>.
+      </p>
+    </li>
+    <li class="has-line-data" data-line-start="103" data-line-end="106">
+      <p class="has-line-data" data-line-start="103" data-line-end="105"><strong>Configurar MySQL</strong><br>
+        Después de instalar MySQL, se debe configurar para garantizar la seguridad de la base de datos. Esto se realiza
+        con el comando:</p>
+    </li>
+  </ol>
+  <pre><code class="has-line-data" data-line-start="107" data-line-end="109" class="language-bash">sudo mysql_secure_installation
+</code></pre>
+  <p class="has-line-data" data-line-start="110" data-line-end="111">Las respuestas a este paso serán de acuerdo a las
+    preguntas, sin embargo, a la primera se responde ‘N’ y a las demás preguntas ‘Y’.</p>
+  <ol start="3">
+    <li class="has-line-data" data-line-start="112" data-line-end="139">
+      <p class="has-line-data" data-line-start="112" data-line-end="114"><strong>Cambiar la contraseña del usuario root
+          en MySQL</strong><br>
+        Para establecer seguridad en la base de datos instalada, se debe cambiar la contraseña, por ende se debe entrar
+        a <code>mysql</code>. Esto se realiza de la siguiente manera:</p>
+      <pre><code class="has-line-data" data-line-start="116" data-line-end="118" class="language-bash">sudo mysql
+</code></pre>
+      <p class="has-line-data" data-line-start="119" data-line-end="120">Si al ejecutar el comando anterior marca algún
+        error, entonces debes probar con el siguiente comando:</p>
+      <pre><code class="has-line-data" data-line-start="122" data-line-end="124" class="language-bash">sudo mysql -u root -p
+</code></pre>
+      <p class="has-line-data" data-line-start="125" data-line-end="126">Para cambiar la contraseña debe de ejecutar el
+        siguiente comando (reemplaza ‘tu_contraseña’ con la contraseña a establecer, para este caso fue
+        <code>servertso</code>):
+      </p>
+      <pre><code class="has-line-data" data-line-start="128" data-line-end="130" class="language-sql"><span class="hljs-operator"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">user</span> <span class="hljs-string">'root'</span>@<span class="hljs-string">'localhost'</span> <span class="hljs-keyword">identified</span> <span class="hljs-keyword">with</span> mysql_native_password <span class="hljs-keyword">by</span> <span class="hljs-string">'tu_contraseña'</span>;</span>
+</code></pre>
+      <p class="has-line-data" data-line-start="131" data-line-end="132">Luego, ejecuta el siguiente comando para que
+        los cambios surtan efecto:</p>
+      <pre><code class="has-line-data" data-line-start="134" data-line-end="136" class="language-sql"><span class="hljs-operator"><span class="hljs-keyword">FLUSH</span> <span class="hljs-keyword">PRIVILEGES</span>;</span>
+</code></pre>
+      <p class="has-line-data" data-line-start="137" data-line-end="138">Finalmente, para salir de la consola de MySQL
+        se ejecuta el comando <code>exit</code>.</p>
+    </li>
+  </ol>
+  <h1 class="code-line" data-line-start=139 data-line-end=140><a id="Instalar_PHP_139"></a>Instalar PHP</h1>
+  <p class="has-line-data" data-line-start="140" data-line-end="141">PHP es un lenguaje de programación de código
+    abierto muy popular para el desarrollo web. Es fácil de aprender y usar, flexible, y tiene una gran comunidad de
+    desarrolladores. PHP es parte del stack LAMP (Linux, Apache, MySQL, PHP), que es una solución popular para desplegar
+    aplicaciones web.</p>
+  <p class="has-line-data" data-line-start="142" data-line-end="143">La instalación de PHP, junto con los módulos
+    necesarios para Apache y MySQL, se puede hacer en una sola línea con el siguiente comando:</p>
+  <pre><code class="has-line-data" data-line-start="145" data-line-end="147" class="language-bash">sudo apt install php libapache2-mod-php php-mysql
+</code></pre>
+  <p class="has-line-data" data-line-start="148" data-line-end="149">Este comando instala PHP, el módulo PHP para Apache
+    (libapache2-mod-php), y el módulo MySQL para PHP (php-mysql). Estos módulos permiten que PHP y Apache trabajen
+    juntos para servir aplicaciones web, y que PHP interactúe con una base de datos MySQL.</p>
+  <h1 class="code-line" data-line-start=151 data-line-end=152><a id="Instalar_phpMyAdmin_151"></a>Instalar phpMyAdmin
+  </h1>
+  <p class="has-line-data" data-line-start="152" data-line-end="153">phpMyAdmin es una herramienta de software libre que
+    se utiliza para la administración de MySQL a través de la web. Proporciona una interfaz gráfica de usuario para
+    realizar una variedad de operaciones en MySQL y MariaDB. Algunas de las operaciones que puedes realizar con
+    phpMyAdmin incluyen la gestión de bases de datos, tablas, columnas, relaciones, índices, usuarios, permisos, y mucho
+    más.</p>
+  <p class="has-line-data" data-line-start="154" data-line-end="155">Para realizar la instalación se debe seguir los
+    siguientes pasos.</p>
+  <ol>
+    <li class="has-line-data" data-line-start="156" data-line-end="165">
+      <p class="has-line-data" data-line-start="156" data-line-end="158"><strong>Instalación</strong><br>
+        Ejecutar el siguiente comando para instalar phpMyAdmin:</p>
+      <pre><code class="has-line-data" data-line-start="160" data-line-end="162" class="language-bash">sudo apt install phpmyadmin
+</code></pre>
+      <p class="has-line-data" data-line-start="163" data-line-end="164">Durante la instalación, pedirá que elijas el
+        servidor web a configurar automáticamente para phpMyAdmin. Selecciona <strong>apache2</strong> pesionando la
+        tecla <code>espace</code>, después se debe de configurar una base de datos para phpMyAdmin con dbconfig-common;
+        selecciona “Sí” y establece una contraseña para phpMyAdmin, paa este caso se establece la contraseña
+        <code>servertso</code>.
+      </p>
+    </li>
+    <li class="has-line-data" data-line-start="165" data-line-end="175">
+      <p class="has-line-data" data-line-start="165" data-line-end="167"><strong>Configurar Apache para usar
+          phpMyAdmin</strong><br>
+        Para que Apache pueda trabajar con phpMyAdmin, necesitas habilitar el módulo <code>rewrite</code> de Apache y
+        reiniciar el servicio Apache. Esto se puede hacer con los siguientes comandos:</p>
+      <pre><code class="has-line-data" data-line-start="169" data-line-end="172" class="language-bash">sudo a2enmod rewrite
+sudo systemctl restart apache2
+</code></pre>
+      <p class="has-line-data" data-line-start="173" data-line-end="174">El módulo <code>rewrite</code> permite a Apache
+        reescribir URLs, lo cual es necesario para algunas funcionalidades de phpMyAdmin. Reiniciar el servicio Apache
+        asegura que los cambios surtan efecto.</p>
+    </li>
+  </ol>
+  <h1 class="code-line" data-line-start=175 data-line-end=176><a id="Prueba_del_sevidor_web_y_MySQL_175"></a>Prueba del
+    sevidor web y MySQL</h1>
+  <p class="has-line-data" data-line-start="177" data-line-end="178">Para probar el servidor web y MySQL, se clona un
+    repositorio de GitHub y se despliega en el servidor. En este caso, se clona el repositorio <code>alumnos</code>:</p>
+  <pre><code class="has-line-data" data-line-start="180" data-line-end="182" class="language-bash">sudo git <span class="hljs-built_in">clone</span> https://github.com/garcialopez/alumnos
+</code></pre>
+  <p class="has-line-data" data-line-start="183" data-line-end="184">Este comando clona el repositorio
+    <code>alumnos</code> en el directorio actual. Para comprobar que el directorio se ha clonado se ejecuta un
+    <code>ls</code> y se visualizan los directorios y archivos que hay.
+  </p>
+  <p class="has-line-data" data-line-start="185" data-line-end="186">Una vez que el repositorio se ha clonado, se debe
+    mover los archivos al directorio del servidor web. El directorio del servidor web Apache por defecto es
+    <code>/var/www/html</code>. Para mover los archivos del repositorio clonado al directorio con el siguiente comando:
+  </p>
+  <pre><code class="has-line-data" data-line-start="188" data-line-end="190" class="language-bash">sudo mv alumnos /var/www/html/
+</code></pre>
+  <p class="has-line-data" data-line-start="191" data-line-end="192">Antes de cambiar la propiedad de los archivos, se
+    debe navegar al directorio donde se encuentran.</p>
+  <pre><code class="has-line-data" data-line-start="194" data-line-end="196" class="language-bash"><span class="hljs-built_in">cd</span> /var/www/html/
+</code></pre>
+  <p class="has-line-data" data-line-start="197" data-line-end="198">Es importante cambiar la propiedad de los archivos
+    a <code>www-data</code>, que es el usuario bajo el cual se ejecuta el servidor web Apache en la mayoría de los
+    sistemas Linux. Esto se puede hacer con el comando <code>chown</code>.</p>
+  <pre><code class="has-line-data" data-line-start="200" data-line-end="202" class="language-bash">sudo chown -R www-data alumnos
+</code></pre>
+  <p class="has-line-data" data-line-start="203" data-line-end="204">Este comando cambia la propiedad de todos los
+    archivos y directorios dentro de <code>alumnos</code> al usuario <code>www-data</code> y al grupo
+    <code>www-data</code>. Esto asegura que Apache tenga los permisos necesarios para leer y servir los archivos de la
+    aplicación web.
+  </p>
+  <h1 class="code-line" data-line-start=206 data-line-end=207><a
+      id="Configuracin_del_sitio_web_alumnos_206"></a>Configuración del sitio web alumnos</h1>
+  <p class="has-line-data" data-line-start="208" data-line-end="209">El archivo <code>database.php</code> que se
+    encuentra en eldirectorio alumnos contiene la configuración de la base de datos para la aplicación web
+    <code>alumnos</code>. Se necesita abrir el archivo y modificar la configuración de la base de datos para que
+    coincida.
+  </p>
+  <p class="has-line-data" data-line-start="210" data-line-end="211">Primero, se navega al directorio
+    <code>alumnos</code> y abre el archivo <code>database.php</code> con el editor de texto <code>nano</code>:
+  </p>
+  <pre><code class="has-line-data" data-line-start="213" data-line-end="216" class="language-bash"><span class="hljs-built_in">cd</span> alumnos
+sudo nano database.php
+</code></pre>
+  <p class="has-line-data" data-line-start="217" data-line-end="218">Busca la línea que comienza con
+    <code>$mysqli = new mysqli('localhost', 'root', 'pass', 'base de datos');</code>.
+  </p>
+  <p class="has-line-data" data-line-start="219" data-line-end="220">Debes cambiar <code>'pass'</code> por la contraseña
+    de tu base de datos, en este caso <code>'servertso'</code>, y <code>'base de datos'</code> por el nombre de tu base
+    de datos, en este caso <code>'test'</code>. La línea modificada debería verse así:</p>
+  <pre><code class="has-line-data" data-line-start="222" data-line-end="224" class="language-php"><span class="hljs-variable">$mysqli</span> = <span class="hljs-keyword">new</span> mysqli(<span class="hljs-string">'localhost'</span>, <span class="hljs-string">'root'</span>, <span class="hljs-string">'servertso'</span>, <span class="hljs-string">'test'</span>);
+</code></pre>
+  <p class="has-line-data" data-line-start="225" data-line-end="226">Guarda los cambios y cierra el archivo.</p>
+  <h1 class="code-line" data-line-start=227 data-line-end=228><a id="Creacin_de_la_base_de_datos_test_227"></a>Creación
+    de la base de datos test</h1>
+  <ol>
+    <li class="has-line-data" data-line-start="229" data-line-end="231">Abre <code>phpMyAdmin</code> desde un navegador
+      web. En este caso, debes entrar desde la dirección IP estática seguida de <code>/phpmyadmin</code>.</li>
+  </ol>
+  <pre><code class="has-line-data" data-line-start="232" data-line-end="234" class="language-bash"><span class="hljs-number">192.168</span>.<span class="hljs-number">1.100</span>/phpmyadmin
+</code></pre>
+  <ol start="2">
+    <li class="has-line-data" data-line-start="235" data-line-end="237">
+      <p class="has-line-data" data-line-start="235" data-line-end="236">Inicia sesión con el usuario <code>root</code>
+        y la contraseña, para este caso es <code>servertso</code>.</p>
+    </li>
+    <li class="has-line-data" data-line-start="237" data-line-end="239">
+      <p class="has-line-data" data-line-start="237" data-line-end="238">Una vez en <code>phpMyAdmin</code>, crea una
+        base de datos llamada <code>test</code>.</p>
+    </li>
+    <li class="has-line-data" data-line-start="239" data-line-end="245">
+      <p class="has-line-data" data-line-start="239" data-line-end="240">Dentro de la base de datos <code>test</code>,
+        crea una tabla o entidad llamada <code>alumnos</code> con los siguientes atributos:</p>
+      <ul>
+        <li class="has-line-data" data-line-start="241" data-line-end="242"><code>id</code>: INT, Auto Increment (AI)
+          Primary</li>
+        <li class="has-line-data" data-line-start="242" data-line-end="243"><code>nombre</code>: VARCHAR(50)</li>
+        <li class="has-line-data" data-line-start="243" data-line-end="245"><code>edad</code>: INT</li>
+      </ul>
+    </li>
+  </ol>
+  <h1 class="code-line" data-line-start=245 data-line-end=246><a id="Despliegue_de_la_web_245"></a>Despliegue de la web
+  </h1>
+  <p class="has-line-data" data-line-start="247" data-line-end="248">Para probar el sitio web, sigue estos pasos:</p>
+  <ol>
+    <li class="has-line-data" data-line-start="249" data-line-end="251">
+      <p class="has-line-data" data-line-start="249" data-line-end="250">Abre un navegador web y escribe la dirección IP
+        del servidor seguido de <code>/alumnos/index.php</code>. Por ejemplo, si la dirección IP del servidor es
+        <code>192.168.1.100</code>, entonces debes escribir <code>192.168.1.100/alumnos/index.php</code>.
+      </p>
+    </li>
+    <li class="has-line-data" data-line-start="251" data-line-end="252">
+      <p class="has-line-data" data-line-start="251" data-line-end="252">Al entrar, deberías poder visualizar el sitio y
+        realizar operaciones CRUD (Crear, Leer, Actualizar, Borrar) en la entidad <code>alumnos</code>.</p>
+    </li>
+  </ol>
+
+
+  <footer class="bg-light p-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 col-md-12 text-lg-left text-center mb-lg-0 mb-2">
+          &copy; <a href="https://comalcalco.tecnm.mx/">
+            2024 - TecNM Campus Comalcalco</a>. Todos los derechos reservados.
+        </div>
+        <div class="col-lg-6 col-md-12 text-lg-right text-center">
+          Diseñado por <a href="https://github.com/garcialopez">García-López</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+</body>
+
+
+
+</html>
